@@ -1,28 +1,19 @@
-const Student = require("../models/studentModel");
+const Student = require('../models/studentModel');
 
 const getAllData = async (req, res) => {
   try {
-    
+    const records = await Student.findAll(); 
 
-    
-
-    const data = await Student.findAll({
-      where: { date: date },
-      attributes: { exclude: ["createdAt", "updatedAt"] }, // Exclude timestamps
-    });
-
-    if (data.length === 0) {
-      return res.status(404).json({ message: "No records found for the given date" });
+    if (records.length > 0) {
+      res.status(200).send({ message: "Data fetched successfully", data: records });
+    } else {
+      res.status(404).send({ message: "No data found" });
     }
-
-    res.status(200).json({
-      message: `Data retrieved successfully for ${date}`,
-      data: data,
-    });
   } catch (error) {
     console.error("Error fetching data:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).send({ message: "Server error, please try again later" });
   }
 };
 
-module.exports = { getAllData };
+
+module.exports = getAllData

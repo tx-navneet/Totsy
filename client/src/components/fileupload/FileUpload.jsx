@@ -4,8 +4,8 @@ import { Button, LinearProgress, Card, CardContent, Typography, Grid } from '@mu
 import { CloudUpload } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import * as XLSX from 'xlsx';
-
-import UploadFile from '../../../services/fileupload/fileUpload';
+import axios from 'axios';
+import FormData from 'form-data';
 
 const FileUpload = () => {
   const [files, setFiles] = useState([]);
@@ -14,6 +14,29 @@ const FileUpload = () => {
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
+      // Prepare the file for upload
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: '/api/api/upload',
+        headers: { 'Content-Type': 'multipart/form-data' },
+
+        data: formData,
+      };
+
+      axios
+        .request(config)
+        .then((response) => {
+          console.log('File uploaded successfully:', response.data);
+        })
+        .catch((error) => {
+          console.error('File upload error:', error);
+        });
+
+      // Reading the file to parse its data
       const reader = new FileReader();
       reader.readAsBinaryString(file);
       reader.onload = (e) => {
@@ -23,28 +46,25 @@ const FileUpload = () => {
         const sheet = workbook.Sheets[sheetName];
         const parsedData = XLSX.utils.sheet_to_json(sheet);
 
-  
         if (parsedData.length > 0) {
           setHeaders(Object.keys(parsedData[0]));
-          
         }
-       
+
+        // Optionally set Excel data
+        setExcelData(parsedData);
       };
 
+      // Updating file state for progress and UI
       const uploadedFile = {
         name: file.name,
         size: file.size,
         progress: Math.floor(Math.random() * 100) + 1,
         type: file.name.split('.').pop().toUpperCase(),
       };
-      
-      
-     
+
       setFiles((prevFiles) => [...prevFiles, uploadedFile]);
     });
   }, []);
-  console.log("state inside file",files)
-  UploadFile(files)
 
   const removeFile = (index) => {
     setFiles(files.filter((_, i) => i !== index));
@@ -55,16 +75,17 @@ const FileUpload = () => {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept:
-      '.xlsx, .xls, .xlsb, .xltx, .xlsm, .csv, .xml, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
+      '.xlsx, .xls, .xlsb, .xltx, .xlsm, .csv, .xml, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,.csv,.xlsx',
   });
 
-  
   return (
+    <div className='w-screen h-screen d-flex justify-center items-center pt-12'>
+
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-lg"
+      className="mx-auto max-w-2xl rounded-lg bg-white p-8 shadow-lg pt-12 "
     >
       <h2 className="mb-4 text-xl font-bold text-gray-700">
         <span className="text-blue-600">UPLOAD</span> EXCEL FILES
@@ -144,6 +165,7 @@ const FileUpload = () => {
         </motion.div>
       )}
     </motion.div>
+    </div>
   );
 };
 

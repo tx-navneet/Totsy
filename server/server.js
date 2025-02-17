@@ -1,20 +1,19 @@
 const express = require('express');
 const sequelize = require('./config/database');
 const uploadRoutes = require('./routes/uploadRoutes');
-const morgan = require("morgan")
-const path = require('path')
+const morgan = require("morgan");
+const cors = require("cors");  // Import CORS
 
 const app = express();
-app.use(morgan("dev"))
+
+// Enable CORS for all routes (all domains, GET, POST, PUT, DELETE)
+app.use(cors({ origin: '*', methods: 'GET,POST,PUT,DELETE' }));
+
+app.use(morgan("dev"));
 app.use(express.json());
 app.use('/api', uploadRoutes);
-app.use(express.static(path.join(__dirname,"../client/dist")))
 
-app.get("*",(req,res)=>{
-  res.sendFile(path.join(__dirname,"../client/dist","index.html"))
-})
-
-const PORT = process.env.PORT || 4040;
+const PORT = process.env.PORT || 9090; // Default port is 9090
 
 // Sync database
 sequelize.sync()

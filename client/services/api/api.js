@@ -1,11 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api/api',
+  baseURL: '/api', // Uses Vite proxy instead of hardcoded backend URL
   timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 export default api;

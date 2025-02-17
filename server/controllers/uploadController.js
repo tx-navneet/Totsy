@@ -86,6 +86,7 @@ const uploadExcel = async (req, res) => {
       message: message,
       insertedRecords: insertedRecords.length,
       skippedRecords: skippedRecords,
+      data: insertedRecords
     });
   } catch (error) {
     console.error("Error processing file:", error);

@@ -13,7 +13,7 @@ const Student = sequelize.define("Student", {
   },
   category: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   activity: {
     type: DataTypes.STRING,
