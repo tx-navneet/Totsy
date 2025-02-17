@@ -5,6 +5,8 @@ import { CloudUpload } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import * as XLSX from 'xlsx';
 
+import UploadFile from '../../../services/fileupload/fileUpload';
+
 const FileUpload = () => {
   const [files, setFiles] = useState([]);
   const [excelData, setExcelData] = useState([]);
@@ -21,10 +23,12 @@ const FileUpload = () => {
         const sheet = workbook.Sheets[sheetName];
         const parsedData = XLSX.utils.sheet_to_json(sheet);
 
+  
         if (parsedData.length > 0) {
           setHeaders(Object.keys(parsedData[0]));
+          
         }
-        setExcelData(parsedData);
+       
       };
 
       const uploadedFile = {
@@ -33,9 +37,14 @@ const FileUpload = () => {
         progress: Math.floor(Math.random() * 100) + 1,
         type: file.name.split('.').pop().toUpperCase(),
       };
+      
+      
+     
       setFiles((prevFiles) => [...prevFiles, uploadedFile]);
     });
   }, []);
+  console.log("state inside file",files)
+  UploadFile(files)
 
   const removeFile = (index) => {
     setFiles(files.filter((_, i) => i !== index));
@@ -49,6 +58,7 @@ const FileUpload = () => {
       '.xlsx, .xls, .xlsb, .xltx, .xlsm, .csv, .xml, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
   });
 
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
