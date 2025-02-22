@@ -1,8 +1,9 @@
-const Student = require('../models/studentModel');
+const { where } = require("sequelize");
+const Student = require("../models/studentModel");
 
 const getAllData = async (req, res) => {
   try {
-    const records = await Student.findAll(); 
+    const records = await Student.findAll();
 
     if (records.length > 0) {
       res.status(200).send({ message: "Data fetched successfully", data: records });
@@ -15,5 +16,4 @@ const getAllData = async (req, res) => {
   }
 };
 
-
-module.exports = getAllData
+module.exports = getAllData;

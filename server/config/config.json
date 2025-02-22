@@ -2,8 +2,22 @@
   "development": {
     "username": "root",
     "password": "",
-    "database": "studentData",
-    "host": "",
+    "database": "",
+    "host": "127.0.0.1",
     "dialect": "mysql"
+  },
+  "supabase": {
+    "username": "postgres",
+    "password": "AnT2rzepWL1JVaAQ",
+    "database": "postgres",
+    "host": "aws-0-us-east-1.pooler.supabase.com",
+    "port": 6543,
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }
